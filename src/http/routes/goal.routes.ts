@@ -8,6 +8,7 @@ import {
 import z from 'zod'
 import { getWeekPendingGoals } from '../../functions/get-week-pending-goals'
 import { createGoalCompletion } from '../../functions/create-goal-completion'
+import { getWeekSummary } from '../../functions/get-week-summary'
 
 export async function goalRoutes(fastify: FastifyInstance) {
   fastify.setValidatorCompiler(validatorCompiler)
@@ -54,6 +55,14 @@ export async function goalRoutes(fastify: FastifyInstance) {
     handler: async req => {
       const { goalId } = req.body
       await createGoalCompletion({ goalId })
+    },
+  })
+
+  fastify.withTypeProvider<ZodTypeProvider>().route({
+    method: 'GET',
+    url: '/summary',
+    handler: async () => {
+      return await getWeekSummary()
     },
   })
 }
